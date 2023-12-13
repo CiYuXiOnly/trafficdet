@@ -1,0 +1,2 @@
+# trafficdet
+pytorch实现基于web的pcap文件恶意流量检测以及深度学习算法
