@@ -1,0 +1,175 @@
+'''
+Description: 
+version: 
+Author: zlx
+Date: 2023-12-09 14:24:22
+LastEditors: zlx
+LastEditTime: 2023-12-12 15:16:35
+'''
+
+'''
+使用模型判断pcap文件的恶意性, 基于包的检测和基于流的检测
+'''
+
+import os
+import numpy as np
+import torch
+from model_operate import ModelOperation
+
+'''
+this is for web API
+'''
+def analysis_pcap(pcap_path, model_path, extract_type, threshold):
+    op = ModelOperation()
+    detail, final_label, prob, _  = op.pcap_predict(pcap_path=pcap_path, 
+                    model_path=model_path, 
+                    extract_type=extract_type, 
+                    threshold=threshold)
+    # detail项转换为str
+    np.set_printoptions(precision=2, floatmode='fixed')  # 设置打印选项，保留2位小数
+    new_lst = []
+    for sublist in detail:  
+        new_sublist = []  
+        for item in sublist:  
+            if isinstance(item, int):  
+                new_sublist.append(str(item))  
+            elif isinstance(item, torch.Tensor):  
+                new_sublist.append(item.numpy().astype(str))  
+            else:
+                new_sublist.append(item)  
+        new_lst.append(new_sublist)
+    detail = new_lst
+    file_name = os.path.basename(pcap_path)
+    sample_num = len(new_lst)
+    if final_label == 0:
+        final_label = 'benign'
+    elif final_label == 1:
+        final_label = 'malicious'
+    model_name = os.path.basename(model_path)
+    
+    return  file_name, sample_num, final_label, model_name, prob, detail
+
+'''
+this is for offline
+'''
+def analysis_pcap_offline_pkg():
+    '''
+    给定一个pcap文件, 利用模型进行检测, 基于包的检测
+    '''
+    t = 0.5
+    model_path = 'model/pkg_model_CIC.pth'
+    print()
+    print('+++++++++++++基于包的检测+++++++++++++++')
+    op = ModelOperation()
+    file_path = 'web/upload/benign_sample.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='pkg', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    print()
+    op = ModelOperation()
+    file_path = 'web/upload/malicious_sample.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='pkg', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    return
+
+def analysis_pcap_offline_flow():
+    '''
+    给定一个pcap文件, 利用模型进行检测, 基于流的检测
+    '''
+    t = 0.85
+    model_path = 'model/flow_model_CIC.pth'
+    print()
+    print('+++++++++++++基于流的检测+++++++++++++++')
+    op = ModelOperation()
+    file_path = 'web/upload/benign_sample.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='flow', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    print()
+    op = ModelOperation()
+    file_path = 'web/upload/malicious_sample.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='flow', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    return
+
+def analysis_pcap_offline_sess():
+    '''
+    给定一个pcap文件, 利用模型进行检测, 基于流的检测
+    '''
+    t = 0.5
+    model_path = 'model/sess_model_CIC.pth'
+    print()
+    print('+++++++++++++基于会话的检测+++++++++++++++')
+    op = ModelOperation()
+    file_path = 'web/upload/benign_sample.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='sess', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    print()
+    op = ModelOperation()
+    file_path = 'web/upload/malicious_sample.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='sess', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    return
+
+if __name__ == '__main__':
+    print()
+    
+    # analysis_pcap_offline_pkg()
+    
+    # analysis_pcap_offline_flow()
+    
+    analysis_pcap_offline_sess()
+    
+    

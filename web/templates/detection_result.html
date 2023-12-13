@@ -1,0 +1,57 @@
+<!-- /*
+ * @Description: 
+ * @version: 
+ * @Author: zlx
+ * @Date: 2023-12-12 14:02:45
+ * @LastEditors: zlx
+ * @LastEditTime: 2023-12-12 18:38:56
+ */ -->
+{% extends "base.html" %}
+
+<title>{% block title %}pcap文件检测结果{% endblock %}</title>
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card mt-5">
+          <div class="card-header bg-info text-white">
+            <h5 class="text-center">Detection Result</h5>
+          </div>
+          <div class="card-body">
+            <p class="font-weight-bold">文件: {{ result_dict.file_name }}</p>
+            <p class="font-weight-bold">文件生成了 {{ result_dict.sample_num }} 个样本</p>
+            <p class="font-weight-bold">预测类型: {{ result_dict.final_label }}</p>
+            <p class="font-weight-bold">预测概率: {{ result_dict.prob }}</p>
+            <p class="font-weight-bold">使用的模型名称: {{ result_dict.model_name }}</p>
+
+            <form action="/detection_result" method="POST">
+              <button type="submit" class="btn btn-primary">返回</button>
+            </form>
+            <p class="font-weight-bold" style="margin-top:2rem">详细信息: </p>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                    <th>每个样本标签</th>
+                    <th>属于0(良性)概率</th>
+                    <th>属于1(恶意)概率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detail in result_dict.detail %}
+                    <tr>
+                    <td>{{ detail[0] }}</td>
+                    <td>{{ detail[1] }}</td>
+                    <td>{{ detail[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,66 @@
+<!-- /*
+ * @Description: 
+ * @version: 
+ * @Author: zlx
+ * @Date: 2023-12-12 14:16:22
+ * @LastEditors: zlx
+ * @LastEditTime: 2023-12-12 14:41:59
+ */ -->
+ {% extends "base.html" %}
+
+{% block title %}pcap文件上传{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card mt-5">
+          <div class="card-header bg-primary text-white">
+            <h5 class="text-center">上传PCAP文件</h5>
+          </div>
+          <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" action="/file_detection" id="uploadForm">
+              <div class="form-group">
+                <label for="file">选择文件:</label>
+                <input type="file" name="file" id="file" class="form-control-file">
+              </div>
+              <div class="form-group">
+                <label for="model_type">选择模型类型:</label>
+                <select name="model_type" id="model_type" class="form-control">
+                  <option value="packet_CIC-IDS-2017">packet_CIC-IDS-2017</option>
+                  <option value="flow_CIC-IDS-2017" selected>flow_CIC-IDS-2017 (推荐)</option>
+                  <option value="session_CIC-IDS-2017">session_CIC-IDS-2017</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" id="submitBtn">上传</button>
+
+              <div id="loading" class="text-center mt-3 d-none">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('uploadForm').addEventListener('submit', function () {
+    document.getElementById('submitBtn').style.display = 'none';  // 隐藏提交按钮
+    document.getElementById('loading').classList.remove('d-none');  // 显示加载图标
+  });
+</script>
+
+<style>
+#loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+</style>
+
+{% endblock %}

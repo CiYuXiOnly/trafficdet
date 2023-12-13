@@ -1,0 +1,8 @@
+cryptography==41.0.7
+scapy==2.5.0
+torch==1.13.1 # 1.x应该都可以，2.x不知道，可以试试
+scikit-learn==1.2.1
+numpy==1.23.
+pandas==1.5.2
+flask==3.0.0
+itsdangerous==2.1.2
