@@ -1,10 +1,10 @@
 '''
 Description: 
 version: 
-Author: zlx
+Author: Zhang Lingxin
 Date: 2023-12-08 09:55:03
-LastEditors: zlx
-LastEditTime: 2023-12-12 15:19:22
+LastEditors: Zhang Lingxin
+LastEditTime: 2023-12-12 10:43:23
 '''
 import torch
 from torch import nn
@@ -15,12 +15,14 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.indim = indim
         
-        if indim not in [23, 72]:
-            raise ValueError("Unsupported input dimension. Supported dimensions are 23 and 72.")
+        if indim not in [23, 43, 72]:
+            raise ValueError("Unsupported input dimension. Supported dimensions are 23, 27, 43, and 72.")
         
         # 动态创建卷积层
         if indim == 23:
             self.conv1 = nn.Conv1d(1, 16, kernel_size=2, stride=1, padding=1)
+        elif indim == 43:
+            self.conv1 = nn.Conv1d(1, 16, kernel_size=4, stride=1, padding=1)
         elif indim == 72:
             self.conv1 = nn.Conv1d(1, 16, kernel_size=5, stride=1, padding=2)
             
@@ -30,6 +32,8 @@ class Net(nn.Module):
         # 定义全连接层
         if indim == 23:
             self.fc1 = nn.Linear(16 * 12, 64)
+        elif indim == 43:
+            self.fc1 = nn.Linear(16 * 20, 64)
         elif indim == 72:
             self.fc1 = nn.Linear(16 * 36, 64)
             
@@ -47,6 +51,8 @@ class Net(nn.Module):
             x = x.view(-1, 16 * 12)  # 展开成一维向量
         elif self.indim == 27:
             x = x.view(-1, 16 * 14)  # 展开成一维向量
+        elif self.indim == 43:
+            x = x.view(-1, 16 * 20)  # 展开成一维向量
         elif self.indim == 72:
             x = x.view(-1, 16 * 36)  # 展开成一维向量
             

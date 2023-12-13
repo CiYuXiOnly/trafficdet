@@ -1,14 +1,14 @@
 '''
 Description: 
 version: 
-Author: zlx
+Author: Zhang Lingxin
 Date: 2023-12-09 14:14:33
-LastEditors: zlx
-LastEditTime: 2023-12-13 08:38:40
+LastEditors: Zhang Lingxin
+LastEditTime: 2023-12-12 12:52:42
 '''
 
 '''
-基于pytorch的训练代码, 需要先在exactor提取pcap特征转换为csv文件
+基于pytorch的训练代码
 '''
 import pandas as pd
 from model import Net
@@ -79,7 +79,7 @@ def unsw_train():
     op = GetDataObj()
     df = pd.read_csv('data/unsw-nb15/unsw.csv')
     train_dataloader, test_dataloader  = op.get_splited_dataloader(df, num_classes=2, batch_size=32, train_ratio=0.8)
-    # print(df.shape)
+    
     # 训练模型
     model_path = 'model/model_UNSW.pth'
     model_op.train_test(model=model, 
@@ -124,9 +124,11 @@ def sess_based_train():
 def main():
     # pkg_based_train()
     
-    # flow_based_train()
+    flow_based_train()
     
-    sess_based_train()
+    # unsw_train()
+    
+    # sess_based_train()
     
     return
 
