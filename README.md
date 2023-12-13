@@ -172,10 +172,9 @@ pkg_model_CIC.pth #基于包特征,ICI-IDS-2017部分数据集
 #### web运行截图
 
 
+<img src="./readme_img/image-20231213190935301.png" alt="image-20231213190935301" style="zoom:33%;" />
 
-<img src="E:\jupyter\project\trafficdet\trafficdet\readme_img\image-20231213190935301.png" alt="image-20231213190935301" style="zoom:33%;" />
-
-<img src="E:\jupyter\project\trafficdet\trafficdet\readme_img\image-20231213190818063.png" alt="image-20231213190818063" style="zoom:33%;" />
+<img src="./readme_img/image-20231213190818063.png" alt="image-20231213190818063" style="zoom:33%;" />
 
 <img src="E:\jupyter\project\trafficdet\trafficdet\readme_img\image-20231213190852677.png" alt="image-20231213190852677" style="zoom:33%;" />
 
