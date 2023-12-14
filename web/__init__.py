@@ -1,10 +1,10 @@
 '''
 Description: 
 version: 
-Author: zlx
+Author: Zhang Lingxin
 Date: 2023-12-09 14:47:14
-LastEditors: zlx
-LastEditTime: 2023-12-12 18:53:59
+LastEditors: Zhang Lingxin
+LastEditTime: 2023-12-09 15:40:33
 '''
 # -*- coding: utf-8 -*-
 from flask import Flask
@@ -21,4 +21,4 @@ os.environ['FLASKR_SETTINGS'] = current_directory + '\\web\\setting.py'  # Set t
 print(os.environ.get('FLASKR_SETTINGS'))
 
 # 设置上传文件大小限制为10MB
-app.config['MAX_CONTENT_LENGTH'] = 30 * 1024 * 1024  # 30MB in bytes
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB in bytes

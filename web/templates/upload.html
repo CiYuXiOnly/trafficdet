@@ -1,66 +1,264 @@
-<!-- /*
- * @Description: 
- * @version: 
- * @Author: zlx
- * @Date: 2023-12-12 14:16:22
- * @LastEditors: zlx
- * @LastEditTime: 2023-12-12 14:41:59
- */ -->
- {% extends "base.html" %}
+<!doctype html>
+<html lang="zh-CN">
 
-{% block title %}pcap文件上传{% endblock %}
+  <head>
+    <meta charset="utf-8">
+    <title>加密恶意流量监测平台</title>
+    <link rel="shortcut icon" href="https://htmlpage.cn/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei">
 
-{% block content %}
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card mt-5">
-          <div class="card-header bg-primary text-white">
-            <h5 class="text-center">上传PCAP文件</h5>
-          </div>
-          <div class="card-body">
-            <form method="POST" enctype="multipart/form-data" action="/file_detection" id="uploadForm">
-              <div class="form-group">
-                <label for="file">选择文件:</label>
-                <input type="file" name="file" id="file" class="form-control-file">
-              </div>
-              <div class="form-group">
-                <label for="model_type">选择模型类型:</label>
-                <select name="model_type" id="model_type" class="form-control">
-                  <option value="packet_CIC-IDS-2017">packet_CIC-IDS-2017</option>
-                  <option value="flow_CIC-IDS-2017" selected>flow_CIC-IDS-2017 (推荐)</option>
-                  <option value="session_CIC-IDS-2017">session_CIC-IDS-2017</option>
-                </select>
-              </div>
-              <button type="submit" class="btn btn-primary" id="submitBtn">上传</button>
+    <link rel="stylesheet" href="../static/css/user-style.css">
+  </head>
 
-              <div id="loading" class="text-center mt-3 d-none">
-              <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-              </div>
-              </div>
+  <body>
 
-            </form>
+    <body>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+      <title>加密恶意流量监测平台</title>
+      <link href="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/css/bootstrap.min.css" rel="stylesheet" />
+      <link href="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/css/bootstrap-icons.css" rel="stylesheet" />
+      <link href="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/css/htmlpage-leadership-event.css" rel="stylesheet" />
+      <nav class="navbar navbar-expand-lg">
+        <div class="container"><a href="./upload.html" class="navbar-brand mx-auto mx-lg-0"><span class="brand-text">人工智能导论</span></a>
+          <div id="navbarNav" class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a href="#section_1" class="nav-link click-scroll">首页</a></li>
+              <li class="nav-item"><a href="#section_2" class="nav-link click-scroll">介绍</a></li>
+              <li class="nav-item"><a href="#section_7" class="nav-link custom-btn btn d-none d-lg-block">上传pcap</a></li>
+            </ul>
+            <div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </nav>
 
-<script>
-  document.getElementById('uploadForm').addEventListener('submit', function () {
-    document.getElementById('submitBtn').style.display = 'none';  // 隐藏提交按钮
-    document.getElementById('loading').classList.remove('d-none');  // 显示加载图标
-  });
-</script>
 
-<style>
-#loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-}
-</style>
 
-{% endblock %}
+
+
+      <main>
+
+
+
+
+
+
+        <section id="section_1" class="hero">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-5 col-12 m-auto">
+                <div class="hero-text">
+                  <h1 class="text-white mb-4"><span class="text-info"
+                      style="font-size:120px;font-family: 'ZCOOL XiaoWei', serif;">加密恶意流量监测平台</span><br /></h1>
+
+                </div>
+              </div>
+            </div>
+            <div class="video-wrap">
+              <video allowfullscreen="allowfullscreen" autoplay="autoplay" class="custom-video" controls="controls" loop="1" muted
+                poster="" src="../static/img/video.mp4">
+                <source src="../static/img/video.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        </section>
+        <section class="highlight">
+          <div class="container">
+            <div class="row">
+              <h2 class="text-white mb-4" style="font-size:85px;font-family: 'ZCOOL XiaoWei', serif;">第五小组</h2>
+              <h3 class="text-white mb-4" style="font-size:40px;font-family: 'ZCOOL XiaoWei', serif;">组长：郭瑞<br>组员：俞柯 曾文博 石峻菱 刘泽豪 李知谦 张凌欣</h3>
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+
+
+
+
+        <section id="section_2" class="about section-padding">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-10 col-12">
+                <h2 class="mb-4">背景<span class="text-info">介绍</span></h2>
+              </div>
+              <br>
+              <div class="col-lg-6 col-12">
+                <h3 class="mb-3">项目名称：基于机器学习的加密恶意流量分析与检测平台</h3>
+                <p>随着近年来HTTPS的普及，加密恶意流量攻击的比例也在逐渐提升。根据报告,目前加密通信的恶意软件基本已经覆盖所有的攻击类型，例如特洛伊木马、勒索软件、感染式、蠕虫病毒、下载器等，其中特洛伊木马和下载器类的恶意软件家族占比较高。</p>
+<!--                <a href="#section_3" class="custom-btn custom-border-btn btn custom-link mt-3 me-3">会议主讲</a><a href="#section_4" class="custom-btn btn custom-link mt-3">预定日程</a>-->
+              </div>
+              <div class="col-lg-6 col-12 mt-5 mt-lg-0">
+                <img src="../static/img/Theproportionofmalware.png" alt="" class="img-fluid speakers-image" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+
+
+
+        <section class="call-to-action section-padding">
+          <div class="container">
+            <div class="row align-items-center">
+              <div class="col-lg-7 col-12">
+                <h2 class="text-white mb-4">当前<span class="text-info">工作结果</span></h2>
+                <p class="text-white"><p><i class="bi-cash me-2"></i> 基于Scapy的正常流量样本的采集,以及对于大规模攻击样本数据包的解析;</p>
+                <p class="text-white"><p><i class="bi-cash me-2"></i> 数据清洗、过滤和特征工程;</p>
+                <p class="text-white"><p><i class="bi-cash me-2"></i> 多种不同的机器学习模型,基于安全攻防系统的可维护性和可解释性的业务要求，重点是SVM、随机森林以及集成学习算法;</p>
+                <p class="text-white"><p><i class="bi-cash me-2"></i> 用户友好的基于Flask的流量文件上传和监测界面；</p>
+
+              </div>
+              <div class="col-lg-3 col-12 ms-lg-auto mt-4 mt-lg-0"><a href="#section_7" class="custom-btn btn">立即开始</a></div>
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+
+        <section id="section_5" class="pricing section-padding">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-10 col-12 text-center mx-auto mb-5">
+                <h2>关于<span class="text-info">本项目</span></h2>
+              </div>
+              <div class="col-lg-4 col-md-6 col-12 mb-5 mb-lg-0">
+                <div class="pricing-thumb bg-white shadow-lg">
+                  <div class="pricing-title-wrap d-flex align-items-center">
+                    <h4 class="pricing-title text-white mb-0">常用软件加密通信方式</h4>
+
+                  </div>
+                  <div class="pricing-body">
+                    <img src="../static/img/1.jpg" alt="" class="img-fluid speakers-image" />
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="col-lg-4 col-md-6 col-12 mb-5 mb-lg-0">
+                <div class="pricing-thumb bg-white shadow-lg">
+                  <div class="pricing-title-wrap d-flex align-items-center">
+                    <h4 class="pricing-title text-white mb-0">各类模型的预测精度</h4>
+
+                  </div>
+                  <div class="pricing-body">
+                    <img src="../static/img/2.jpg" alt="" class="img-fluid speakers-image" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-12">
+                <div class="pricing-thumb bg-white shadow-lg">
+                  <div class="pricing-title-wrap d-flex align-items-center">
+                    <h4 class="pricing-title text-white mb-0">项目亮点</h4>
+
+                  </div>
+                  <div class="pricing-body">
+                    <p><i class="bi-cash me-2"></i> 多种协议模板(TCP UDP IP EHER PORT WARN)，能够抓取数据更多类型更加丰富的流量数据
+                    </p>
+                    <p><i class="bi-boombox me-2"></i> 支持对200MB及以上的pcap文件的协议解析
+                    </p>
+                    <p><i class="bi-chat-square me-2"></i> 完整的结合词频(TF)分析法对流量文件的特征工程
+                    </p>
+                    <p><i class="bi-chat-square me-2"></i> 模块化的协议解析类、特征工程、模型训练预测的API，具有较好的借鉴作用
+                    </p>
+                    <p><i class="bi-chat-square me-2"></i> 基于Flask的友好简洁的流量文件上传解析界面
+                  </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+
+
+
+        <section id="section_7" class="contact section-padding">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-8 col-12 mx-auto">
+
+
+
+
+
+                <form action="{{ url_for('detection') }}" method="post" role="form" class="custom-form contact-form bg-white shadow-lg" enctype="multipart/form-data">
+                  <h2>请上传pcap流量文件</h2>
+                  <div class="row">
+
+
+                    <div class="col-12">
+                      <input type="file" name="file" accept=".jpg,.png,.zip,.tar.gz,.pcap" multiple="multiple" class="form-control" onchange="changefile(this.value)"/>
+                      <button type="submit" class="form-control">上传</button></div>
+                      <p>注意：请将上传的pcap文件大小控制在10Mb之内</p>
+
+                  </div>
+
+                </form>
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <footer class="site-footer">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-12 col-12 border-bottom pb-5 mb-5">
+              <div class="d-flex"><a href="#section_1" class="navbar-brand"><span class="brand-text">加密恶意流量监测平台</span></a>
+              </div>
+            </div>
+            <div class="col-lg-7 col-12">
+            </div>
+            <div class="col-lg-5 col-12 ms-lg-auto">
+              <div class="copyright-text-wrap d-flex align-items-center">
+                <p class="copyright-text ms-lg-auto me-4 mb-0">人工智能导论 第五小组<br>组长：郭瑞<br>组员：俞柯 曾文博 石峻菱 刘泽豪 李知谦 张凌欣</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer><!-- JAVASCRIPT FILES -->
+      <script src="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/js/jquery.min.js"></script>
+      <script src="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/js/bootstrap.min.js"></script>
+      <script src="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/js/jquery.sticky.js"></script>
+      <script src="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/js/click-scroll.js"></script>
+      <script src="https://template-1253409072.cos.ap-guangzhou.myqcloud.com/html-template/htmlpage_575_leadership_event/js/custom.js"></script>
+    </body>
+  </body>
+  <html>

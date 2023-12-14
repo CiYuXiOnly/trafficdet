@@ -1,10 +1,10 @@
 '''
 Description: 
 version: 
-Author: zlx
+Author: Zhang Lingxin
 Date: 2023-12-08 10:56:10
-LastEditors: zlx
-LastEditTime: 2023-12-12 18:48:25
+LastEditors: Zhang Lingxin
+LastEditTime: 2023-12-12 12:56:33
 '''
 import os
 import torch
@@ -155,7 +155,7 @@ class ModelOperation():
             op = GetDataObj()
             df = op.get_df_from_featured_csv(featured_csv_path='data/featured_csv/example_flow.csv')
             df = df.drop(["src", "sport", "dst", "dport"], axis=1)
-            # print(df.columns)
+            print(df.columns)
             # 实例化模型并加载模型
             model = Net(indim=72)
             if 'flow' not in model_path:

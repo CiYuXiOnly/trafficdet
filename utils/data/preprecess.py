@@ -1,9 +1,9 @@
 '''
 Description: 
 version: 
-Author: zlx
+Author: Zhang Lingxin
 Date: 2023-12-09 14:10:33
-LastEditors: zlx
+LastEditors: Zhang Lingxin
 LastEditTime: 2023-12-11 17:03:32
 '''
 import numpy as np

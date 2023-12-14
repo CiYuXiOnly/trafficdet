@@ -1,9 +1,9 @@
 '''
 Description: 
 version: 
-Author: zlx
+Author: Zhang Lingxin
 Date: 2023-12-08 09:34:30
-LastEditors: zlx
+LastEditors: Zhang Lingxin
 LastEditTime: 2023-12-11 21:43:40
 '''
 from sklearn.model_selection import train_test_split

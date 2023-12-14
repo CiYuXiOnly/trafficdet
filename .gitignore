@@ -1,7 +1,3 @@
-data/
-model/
-web/upload/
-alg/dataset/
 *.pth
 *.pkl
 *.npy
