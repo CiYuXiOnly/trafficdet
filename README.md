@@ -17,7 +17,13 @@ web模块使用fask+bootstrap+jinja2
 >  如果有大佬能提提意见，比如对pcap文件很有效的python特征提取方式，将感激不尽！以及有其他问题可以联系：`2763445059@qq.com`
 
 ### working on version
-v3.0.2，v1.2.1
+v3.0.2，v2.0.2，v1.2.1
+
+v1.x侧重pcap文件提取特征为csv，并使用模型预测pcap文件，无web支持，1.x的代码在v1.x分支
+
+v2.x是在v1.x基础上添加web支持，前端以及其他一些内容是其他同学写的，2.x的代码在v2.x分支中
+
+v3.x提供了流量检测与分类算法alg/，以及自己写的相对简洁前端，3.x的代码在默认main分支中
 
 #### 目录
 
@@ -38,7 +44,7 @@ v3.0.2，v1.2.1
 /utils
 	/data # 数据预处理，以及dataset类，获取dataloader类等
 /web # web应用相关
-       /upload # pcap文件上传路径（手动创建）
+       /upload (手动创建) # pcap文件上传路径
 
 tmp.py # pcap预测模型功能测试
 model.py # pcap预测模型
@@ -308,3 +314,7 @@ v1.x版本可能会继续探索python提取pcap特征为csv文件
 02-14-2018.csv，02-15-2018.csv，02-16-2018.csv，02-21-2018.csv，02-22-2018.csv，02-23-2018.csv，02-28-2018.csv，03-02-2018.csv
 
 新增数据预处理脚本，以及算法graphsage, resnet支持该数据集
+
+## trafficdet_v2.0.1更新说明
+
+优化了若干BUG
