@@ -17,7 +17,7 @@ web模块使用fask+bootstrap+jinja2
 >  如果有大佬能提提意见，比如对pcap文件很有效的python特征提取方式，将感激不尽！以及有其他问题可以联系：`2763445059@qq.com`
 
 ### working on version
-v3.0.2
+v3.0.2，v1.2.1
 
 #### 目录
 
@@ -38,7 +38,7 @@ v3.0.2
 /utils
 	/data # 数据预处理，以及dataset类，获取dataloader类等
 /web # web应用相关
-       /upload # pcap文件上传路径
+       /upload # pcap文件上传路径（手动创建）
 
 tmp.py # pcap预测模型功能测试
 model.py # pcap预测模型
