@@ -1,7 +1,15 @@
 from scapy.all import *
 import csv
 import statistics
+'''
+main API SessProcess()
 
+op = SessProcess()
+op.extract_sess_feature_from_pcap(pcap_path="", 
+                                    csv_path=",
+                                    label='0',
+                                    per_print=10)
+'''
 class SessProcess():
     def __init__(self):
         pass

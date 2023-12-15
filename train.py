@@ -1,10 +1,10 @@
 '''
 Description: 
 version: 
-Author: Zhang Lingxin
+Author: zlx
 Date: 2023-12-09 14:14:33
-LastEditors: Zhang Lingxin
-LastEditTime: 2023-12-12 12:52:42
+LastEditors: zlx
+LastEditTime: 2023-12-15 19:39:02
 '''
 
 '''
@@ -111,6 +111,35 @@ def sess_based_train():
     
     # 训练模型
     model_path = 'model/sess_model_CIC.pth'
+    model_op.train_test(model=model, 
+                         train_dataloader=train_dataloader, 
+                         test_dataloader=test_dataloader,
+                         num_epochs=5, 
+                         model_path=model_path,
+                         per_print=20
+                         )
+    print('模型保存在 {}'.format(model_path))
+    return
+
+def tshark_based_train():
+    model_op = ModelOperation()
+    print()
+    print('++++++++++++++++基于tshark检测+++++++++++++++')
+    print('=============CIC-IDS-2017数据集=============')
+    
+    # 准备数据
+    model = Net(indim=41)
+    op = GetDataObj()
+    # 提取特征时，已经添加了0或1标签的数据集
+    df_good = op.get_df_from_featured_csv_add_label(featured_csv_path='data/featured_csv/benign_small_tshark.csv', label='good')
+    df_bad = op.get_df_from_featured_csv_add_label(featured_csv_path='data/featured_csv/malicious_small_tshark.csv', label='bad')
+    df = pd.concat([df_good, df_bad])
+    df = df.drop(['src_ip', 'dest_ip', 'src_port', 'dest_port'], axis=1)
+    # print(df.columns)
+    train_dataloader, test_dataloader  = op.get_splited_dataloader(df, num_classes=2, batch_size=32, train_ratio=0.8)
+    
+    # 训练模型
+    model_path = 'model/tshark_model_CIC.pth'
     model_op.train_test(model=model, 
                          train_dataloader=train_dataloader, 
                          test_dataloader=test_dataloader,

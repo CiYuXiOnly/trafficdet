@@ -1,10 +1,10 @@
 '''
 Description: 
 version: 
-Author: Zhang Lingxin
+Author: zlx
 Date: 2023-12-08 09:24:35
-LastEditors: Zhang Lingxin
-LastEditTime: 2023-12-11 21:11:15
+LastEditors: zlx
+LastEditTime: 2023-12-15 20:38:53
 '''
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
@@ -17,7 +17,17 @@ import pandas as pd
 import re
 from sklearn import preprocessing
 
+'''
+main API CsvfeatureExtractOp()
 
+op1 = Pcap2csvOp(pcapfilepath, csvfilepath, isadded)
+# pcap生成csv
+op1.generateCSV()
+
+op2 = CsvfeatureExtractOp(csvpath, featured_csvpath, isadded)
+# 对生成的csv进行特征提取
+op2.extract()
+'''
 class GetFeature():
     def __init__(self):
         pass

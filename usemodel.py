@@ -1,14 +1,14 @@
 '''
 Description: 
 version: 
-Author: Zhang Lingxin
+Author: zlx
 Date: 2023-12-09 14:24:22
-LastEditors: Zhang Lingxin
-LastEditTime: 2023-12-12 11:49:46
+LastEditors: zlx
+LastEditTime: 2023-12-15 19:36:01
 '''
 
 '''
-使用模型判断pcap文件的恶意性, 基于包的检测和基于流的检测
+使用模型判断pcap文件的恶意性
 '''
 
 from model_operate import ModelOperation

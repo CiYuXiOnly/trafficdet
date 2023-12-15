@@ -1,10 +1,10 @@
 '''
 Description: 
 version: 
-Author: Zhang Lingxin
+Author: zlx
 Date: 2023-12-11 09:35:49
-LastEditors: Zhang Lingxin
-LastEditTime: 2023-12-11 21:46:19
+LastEditors: zlx
+LastEditTime: 2023-12-15 21:07:51
 '''
 
 from extractor.flow_based.pcap_flow_feature import FlowProcess
@@ -71,11 +71,22 @@ def extract_based_sess():
                                       label='1')
     return
 
+def extract_tshark():
+    from extractor.tshark_flow.tshark_feat_extract import TsharkExtractorProcess
+    tp = TsharkExtractorProcess(pcap_path='data/pcap/malicious_small.pcap', 
+                                output_dir='data/featured_csv/',
+                                saved_file_type='csv')
+    tp.extract(target="tls", isall=False)
+
+
 if __name__ == "__main__":
+    print()
     
     # extract_based_pkg()
     
-    extract_based_flow()
+    # extract_based_flow()
     
     # extract_based_sess()
+    
+    extract_tshark()
     

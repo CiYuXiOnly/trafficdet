@@ -1,15 +1,29 @@
 '''
 Description: 
 version: 
-Author: Zhang Lingxin
+Author: zlx
 Date: 2023-12-08 21:49:47
-LastEditors: Zhang Lingxin
-LastEditTime: 2023-12-09 01:26:45
+LastEditors: zlx
+LastEditTime: 2023-12-15 21:14:02
 '''
 from extractor.flow_based.flow import *
 from extractor.flow_based.flow import feature_names
 from joblib import *
+'''
+main API FlowProcess()
 
+config = {  
+        "run_mode": '',  # 'pcap' or 'flow'
+        "pcap_loc": '',  # pcap dir
+        "pcap_name": '',  # pcap file name
+        "csv_path": '',  # csv file path/name
+        "print_colname": True,  
+        "read_all": False
+    }
+p = FlowProcess(config)
+p.extract_flow_feature_from_pcap()
+
+'''
 class FlowProcess():
 
     def __init__(self, config_dict):
