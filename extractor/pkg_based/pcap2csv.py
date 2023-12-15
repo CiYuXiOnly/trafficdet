@@ -4,12 +4,23 @@ version:
 Author: zlx
 Date: 2023-12-08 08:58:09
 LastEditors: zlx
-LastEditTime: 2023-12-11 20:04:19
+LastEditTime: 2023-12-15 20:40:44
 '''
 import os
 import scapy.all as scapy
 from extractor.pkg_based.pcapDecode import PcapDecode
+'''
+main API Pcap2csvOp()
 
+op1 = Pcap2csvOp(pcapfilepath, csvfilepath, isadded)
+# pcap生成csv
+op1.generateCSV()
+
+op2 = CsvfeatureExtractOp(csvpath, featured_csvpath, isadded)
+# 对生成的csv进行特征提取
+op2.extract()
+
+'''
 class Pcap2csvOp():
     def __init__(self, pcapfilepath, csvfilepath, isadded=False, usingflag=None):
         self.csvfilepath=csvfilepath

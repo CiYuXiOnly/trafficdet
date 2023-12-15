@@ -6,3 +6,5 @@ alg/dataset/
 *.pkl
 *.npy
 *.csv
+*.json
+*.pcap

@@ -1,10 +1,11 @@
+
 '''
 Description: 
 version: 
 Author: zlx
 Date: 2023-12-08 09:34:30
 LastEditors: zlx
-LastEditTime: 2023-12-11 21:43:40
+LastEditTime: 2023-12-15 21:03:24
 '''
 from sklearn.model_selection import train_test_split
 from extractor.pkg_based.pcap2csv import Pcap2csvOp
@@ -224,6 +225,20 @@ def test9():
     return
 
 
+def test10():
+    '''
+    测试exactor/tshark_flow
+    '''
+    from extractor.tshark_flow.tshark_feat_extract import TsharkExtractorProcess
+    tp = TsharkExtractorProcess(pcap_path='upload/1.pcap', 
+                                output_dir='./',
+                                saved_file_type='json')
+    tp.extract(target="tls", isall=False)
+
+    
+    return
+
+
 if __name__=='__main__':
     print()
     
@@ -245,4 +260,6 @@ if __name__=='__main__':
     
     # test8()
     
-    test9()
+    # test9()
+    
+    test10()
