@@ -4,11 +4,11 @@ version:
 Author: zlx
 Date: 2023-12-09 14:14:33
 LastEditors: zlx
-LastEditTime: 2023-12-13 08:38:40
+LastEditTime: 2023-12-16 08:32:01
 '''
 
 '''
-基于pytorch的训练代码, 需要先在exactor提取pcap特征转换为csv文件
+基于pytorch的训练代码
 '''
 import pandas as pd
 from model import Net
@@ -79,7 +79,7 @@ def unsw_train():
     op = GetDataObj()
     df = pd.read_csv('data/unsw-nb15/unsw.csv')
     train_dataloader, test_dataloader  = op.get_splited_dataloader(df, num_classes=2, batch_size=32, train_ratio=0.8)
-    # print(df.shape)
+    
     # 训练模型
     model_path = 'model/model_UNSW.pth'
     model_op.train_test(model=model, 
@@ -121,12 +121,45 @@ def sess_based_train():
     print('模型保存在 {}'.format(model_path))
     return
 
+def tshark_based_train():
+    model_op = ModelOperation()
+    print()
+    print('++++++++++++++++基于tshark检测+++++++++++++++')
+    print('=============CIC-IDS-2017数据集=============')
+    
+    # 准备数据
+    model = Net(indim=41)
+    op = GetDataObj()
+    # 提取特征时，已经添加了0或1标签的数据集
+    df_good = op.get_df_from_featured_csv_add_label(featured_csv_path='data/featured_csv/benign_small_tshark.csv', label='good')
+    df_bad = op.get_df_from_featured_csv_add_label(featured_csv_path='data/featured_csv/malicious_small_tshark.csv', label='bad')
+    df = pd.concat([df_good, df_bad])
+    df = df.drop(['src_ip', 'dest_ip', 'src_port', 'dest_port'], axis=1)
+    # print(df.columns)
+    train_dataloader, test_dataloader  = op.get_splited_dataloader(df, num_classes=2, batch_size=32, train_ratio=0.8)
+    
+    # 训练模型
+    model_path = 'model/tshark_model_CIC.pth'
+    model_op.train_test(model=model, 
+                         train_dataloader=train_dataloader, 
+                         test_dataloader=test_dataloader,
+                         num_epochs=10, 
+                         model_path=model_path,
+                         per_print=20
+                         )
+    print('模型保存在 {}'.format(model_path))
+    return
+
 def main():
     # pkg_based_train()
     
     # flow_based_train()
     
-    sess_based_train()
+    # unsw_train()
+    
+    # sess_based_train()
+    
+    tshark_based_train()
     
     return
 
