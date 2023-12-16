@@ -4,7 +4,7 @@ version:
 Author: zlx
 Date: 2023-12-09 14:24:22
 LastEditors: zlx
-LastEditTime: 2023-12-15 19:36:01
+LastEditTime: 2023-12-16 08:57:11
 '''
 
 '''
@@ -127,6 +127,41 @@ def analysis_pcap_offline_sess():
     
     return
 
+def analysis_pcap_offline_tshark():
+    t = 0.5
+    model_path = 'model/tshark_model_CIC.pth'
+    print()
+    print('+++++++++++++基于tshark的检测+++++++++++++++')
+    op = ModelOperation()
+    file_path = 'upload/1.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='tshark', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    print()
+    op = ModelOperation()
+    file_path = 'upload/malicious_sample.pcap'
+    detail, final_label, prob, prefer = op.pcap_predict(pcap_path=file_path, 
+                    model_path=model_path, 
+                    extract_type='tshark', 
+                    threshold=t)
+    # print(detail)
+    print()
+    print('pcap文件: {}, 模型: {}'.format(file_path, model_path))
+    print('阈值: {}'.format(t))
+    print('pcap文件类别是: ', final_label)
+    print('属于{}类别的可能性: {}'.format(prefer, prob))
+    
+    return
+
+
 if __name__ == '__main__':
     print()
     
@@ -134,6 +169,8 @@ if __name__ == '__main__':
     
     # analysis_pcap_offline_flow()
     
-    analysis_pcap_offline_sess()
+    # analysis_pcap_offline_sess()
+    
+    analysis_pcap_offline_tshark()
     
     

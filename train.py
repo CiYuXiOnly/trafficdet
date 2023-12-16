@@ -4,7 +4,7 @@ version:
 Author: zlx
 Date: 2023-12-09 14:14:33
 LastEditors: zlx
-LastEditTime: 2023-12-15 19:39:02
+LastEditTime: 2023-12-16 08:32:01
 '''
 
 '''
@@ -143,7 +143,7 @@ def tshark_based_train():
     model_op.train_test(model=model, 
                          train_dataloader=train_dataloader, 
                          test_dataloader=test_dataloader,
-                         num_epochs=5, 
+                         num_epochs=10, 
                          model_path=model_path,
                          per_print=20
                          )
@@ -153,11 +153,13 @@ def tshark_based_train():
 def main():
     # pkg_based_train()
     
-    flow_based_train()
+    # flow_based_train()
     
     # unsw_train()
     
     # sess_based_train()
+    
+    tshark_based_train()
     
     return
 

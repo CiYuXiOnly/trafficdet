@@ -195,3 +195,7 @@ tp.extract(target="tls", isall=False)
 
 ##### 实验结果
 
+训练 Test set: Average loss: 0.6747, Accuracy: 110/185 (59%)
+
+比较显著偏向非恶意，概率都是57左右，没有较强的区分效果
+
