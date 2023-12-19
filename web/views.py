@@ -47,18 +47,18 @@ def detection():
             flash('upload file is successfully saved !')
             
             pcap_path = pcap_save_path
-            model_path = 'model/pkg_model_CIC.pth'
-            extract_type  = 'pkg'
+            model_path = 'model/flow_model_CIC.pth'
+            extract_type  = 'flow'
             threshold = 0.5
             detail, final_label, prob = analysis_pcap(pcap_path, 
                                                       model_path, 
                                                       extract_type, 
                                                       threshold)
             
-            if not final_label:
-                return render_template('result.html',content='The file is safe')
-            else:
+            if final_label:
                 return render_template('result.html',content='The file is dangerous')
+            else:
+                return render_template('result.html',content='The file is safe')
             # 后续需要更改此处的逻辑，以更加合适的方式返回！！！！
     elif request.method=="GET":
         return redirect(url_for('upload'))

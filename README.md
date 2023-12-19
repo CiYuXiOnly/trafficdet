@@ -8,43 +8,33 @@
 
 web模块使用fask+bootstrap+jinja2
 
-使用pytorch，模型对pcap包的检测只实现二分类，但对于流量检测和分类算法还在继续更新...
+模型使用pytorch，对pcap包的检测只实现二分类
 
-简单地说，该项目只是一个在线检测pcap文件**用于学习的demo**，尤其需要在pcap预测模型上提高准确率和预测水平
+简单地说，该项目只是一个在线检测pcap文件用于学习的demo，尤其需要在pcap预测模型上提高准确率和预测水平
 
 `没有gpu，所有算法都是先在cpu上跑通，需要再去部署云上的，所以模型训练什么的有些代码可能没有.to(device)，，没有改到的地方麻烦自己改一下`
 
->  如果有大佬能提提意见，比如对pcap文件很有效的python特征提取方式，将感激不尽！以及有其他问题可以联系：`2763445059@qq.com`
-
 ### working on version
-v3.0.2，v2.0.2，v1.2.1
-
-v1.x侧重pcap文件提取特征为csv，并使用模型预测pcap文件，无web支持，1.x的代码在v1.x分支
-
-v2.x是在v1.x基础上添加web支持，前端以及其他一些内容是其他同学写的，2.x的代码在v2.x分支中
-
-v3.x提供了流量检测与分类算法alg/，以及自己写的相对简洁前端，3.x的代码在默认main分支中
+v1.3, v2.0.1, v3.0.2
 
 #### 目录
 
 ```cmd
 /alg # 流量检测算法（独立，不是给web提供的，也不是仅针对pcap的）
-       /dataset (手动创建)
-       		/UNSW-NB15 (手动创建)
-       		/CSE-CIC-IDS2018 (手动创建)
+       /dataset
        /alg.../data_script.py
        /alg.../train.py
-/data (手动创建)# 用于web预测模型的数据与数据集
-       /csv (手动创建)
-       /pcap (手动创建)
-       /featured_csv (手动创建)
-/model (手动创建)# 存放训练好的模型（用于web，暂时只用CNN做了测试）
+/data # 用于web预测模型的数据与数据集
+       /csv
+       /pcap
+       /featured_csv
+/model # 存放训练好的模型（用于web，暂时只用CNN做了测试）
 /extractor # 提取特征工具类
 /test # 测试
 /utils
 	/data # 数据预处理，以及dataset类，获取dataloader类等
 /web # web应用相关
-       /upload (手动创建) # pcap文件上传路径
+       /upload # pcap文件上传路径
 
 tmp.py # pcap预测模型功能测试
 model.py # pcap预测模型
@@ -57,7 +47,7 @@ main.py # 运行web服务器
 # 注意
 # 如果觉得web模块冗余，可以直接去掉main.py和web/文件夹，不会影响其他功能
 # 如果只对三种特征提取感兴趣，可以只保留exactor/文件夹，然后调用封装好的类
-# 如果只对深度学习算法感兴趣，可以只保留alg/文件夹
+# 如果只对算法感兴趣（不包括web使用的CNN），可以只保留alg/文件夹
 # 如果只想用基于web对pcap文件的检测, 可以删去alg/
 ```
 
@@ -99,18 +89,7 @@ python -m alg.resnet.train --dataset=UNSW-NB15 --binary=1
 ```
 
 ##### 数据集
-项目中没有提供数据（太大），
-
-这里用网盘提供原始数据，中间数据，模型等可以用于测试跑通代码的数据，下载解压缩后放入对应文件夹中
-
-trafficdet(data).zip 可以用于跑通所有模块和功能的测试数据
-
-```
-链接：https://pan.baidu.com/s/1YQaWSofxRm8z_ELTQSNK8Q 
-提取码：oidy
-```
-
-
+项目中没有提供数据，数据另取，放入对应文件夹中
 
 #### 特征处理与模型
 
@@ -151,8 +130,6 @@ pkg_model_CIC.pth #基于包特征,ICI-IDS-2017部分数据集
 # 依此类推
 ```
 
-
-
 #### 怎么改pcap预测模型相关
 
 ##### 改模型
@@ -165,25 +142,11 @@ pkg_model_CIC.pth #基于包特征,ICI-IDS-2017部分数据集
 
 ##### 改计算文件类别算法
 
-若干样本的类别和概率 -> 整个文件的类别和概率，这部分计算地可能不太科学，可能需要改算法（）
+后台API：usemodel.analysis返回了三个值，第一个是详细信息，是该pcap生成的若干个样本的类别和概率，第二个是综合类别，第三个是综合类别概率
+
+这部分计算地可能不太科学，可能需要改算法（若干样本的类别和概率 -> 整个文件的类别和概率）
 
 就是改这个：model_operate.ModelOperation().pcap_predict
-
-#### 怎么改alg/ 目录下的算法
-
-算法基本上是单独的，直接拿出来改
-
-
-
-#### web运行截图
-
-
-<img src="./readme_img/image-20231213190935301.png" alt="image-20231213190935301" style="zoom:33%;" />
-
-<img src="./readme_img/image-20231213190818063.png" alt="image-20231213190818063" style="zoom:33%;" />
-
-<img src="./readme_img/image-20231213190852677.png" alt="image-20231213190852677" style="zoom:33%;" />
-
 
 
 ## trafficdet_v2.0更新说明
@@ -314,7 +277,3 @@ v1.x版本可能会继续探索python提取pcap特征为csv文件
 02-14-2018.csv，02-15-2018.csv，02-16-2018.csv，02-21-2018.csv，02-22-2018.csv，02-23-2018.csv，02-28-2018.csv，03-02-2018.csv
 
 新增数据预处理脚本，以及算法graphsage, resnet支持该数据集
-
-## trafficdet_v2.0.1更新说明
-
-优化了若干BUG

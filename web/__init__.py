@@ -11,6 +11,8 @@ from flask import Flask
 
 app=Flask(__name__)
 
+import views
+
 # 查看环境变量是否配置成功
 import  os
 

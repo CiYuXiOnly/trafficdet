@@ -28,7 +28,7 @@ class ModelOperation():
         pass
 
     # 训练模型
-    def train_test(self, model, train_dataloader, test_dataloader, num_epochs=5, model_path='model/model.pth', per_print=100):
+    def train_test(self, model, train_dataloader, test_dataloader, num_epochs=5, model_path='model/flow_model_CIC.pth', per_print=100):
         
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.01)  # 使用Adam优化器 
@@ -100,10 +100,10 @@ class ModelOperation():
     输入: pcap_path, extract_type, model_path, threshold=0.5
     输出: detail, final_label, probability, prefer
     '''
-    def pcap_predict(self, pcap_path, extract_type, model_path, threshold=0.5):
+    def pcap_predict(self, pcap_path, extract_type, model_path, threshold=0.505):
         detail = None
-        label = None
-        probability = None
+        label = 0
+        probability = 0
         prefer = 0
         
         val_list = ['flow', 'pkg', 'sess']
@@ -129,7 +129,7 @@ class ModelOperation():
             if 'pkg' not in model_path:
                 print('指定的特征提取方式与模型不匹配！！！')
                 return (detail, label, probability)
-            model.load_state_dict(torch.load(model_path))
+            model.load_state_dict(torch.load(model_path), False)
             
             # 预测，获得每个样本的预测标签和概率
             # pred_label [1, 0, 1]  preb [[0.3,0.7], [0.4,0.6], [0.2, 0.8]]
@@ -161,7 +161,7 @@ class ModelOperation():
             if 'flow' not in model_path:
                 print('指定的特征提取方式与模型不匹配！！！')
                 return (detail, label, probability)
-            model.load_state_dict(torch.load(model_path))
+            model.load_state_dict(torch.load(model_path), False)
             
             # 预测，获得每个样本的预测标签和概率
             # pred_label [1, 0, 1]  preb [[0.3,0.7], [0.4,0.6], [0.2, 0.8]]
@@ -185,12 +185,12 @@ class ModelOperation():
             if 'sess' not in model_path:
                 print('指定的特征提取方式与模型不匹配！！！')
                 return (detail, label, probability)
-            model.load_state_dict(torch.load(model_path))
+            model.load_state_dict(torch.load(model_path), False)
             
             pred_label, preb = self.predict(model, df)
             detail, final_label, probability, prefer = self.get_result(pred_label, preb, threshold)
             
-        return detail, final_label, probability, prefer
+        return detail, final_label, probability
     
     '''
     一个pcap文件会生成若干样本, 每个样本都有一个预测标签和概率
@@ -227,6 +227,8 @@ class ModelOperation():
             sum.add_(item)
         # 这里的probability表示属于0的平均概率
         probability = sum.item()/len
+
+        print(probability)
         
         if probability > 0.5:
             # 偏向于预测为0

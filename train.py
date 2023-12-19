@@ -66,7 +66,7 @@ def flow_based_train():
     model_usr.train_test(model=model, 
                          train_dataloader=train_dataloader, 
                          test_dataloader=test_dataloader,
-                         num_epochs=20, 
+                         num_epochs=30, 
                          model_path=model_path,
                          per_print=20
                          )

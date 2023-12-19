@@ -106,7 +106,7 @@ class GetFeature():
         data6 = data5.copy()
         flist = []
         for item in data6["tcp_payload"]:
-            item = item.replace("Raw", "RAW")
+            item = str(item).replace("Raw", "RAW")
             # 使用正则表达式查找全是大写字母的子串
             matches = re.findall(r'\b[A-Z]{2,}\b', item)
             # 将匹配项列表转换为集合，去除其中重复项，并将结果转换回列表
@@ -125,7 +125,7 @@ class GetFeature():
 
         flist = []
         for item in data6["udp_payload"]:
-            item = item.replace("Raw", "RAW")
+            item = str(item).replace("Raw", "RAW")
             # 使用正则表达式查找全是大写字母的子串
             matches = re.findall(r'\b[A-Z]{2,}\b', item)
             # 将匹配项列表转换为集合，去除其中重复项，并将结果转换回列表
