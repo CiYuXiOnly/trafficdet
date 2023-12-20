@@ -8,3 +8,6 @@ alg/dataset/
 *.csv
 *.json
 *.pcap
+*.pcapng
+__pycache__/
+*.ipynb_checkpoints

@@ -4,7 +4,7 @@ version:
 Author: zlx
 Date: 2023-12-08 09:55:03
 LastEditors: zlx
-LastEditTime: 2023-12-15 19:26:47
+LastEditTime: 2023-12-20 15:27:23
 '''
 import torch
 from torch import nn
@@ -15,47 +15,44 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.indim = indim
         
-        if indim not in [23, 41, 72]:
-            raise ValueError("Unsupported input dimension. Supported dimensions are 23, 41, and 72.")
+        if indim not in [23, 43, 72]:
+            raise ValueError("Unsupported input dimension. Supported dimensions are 23, 43, and 72.")
         
-        # 动态创建卷积层
-        if indim == 23:
-            self.conv1 = nn.Conv1d(1, 16, kernel_size=2, stride=1, padding=1)
-        elif indim == 41:
-            self.conv1 = nn.Conv1d(1, 16, kernel_size=3, stride=1, padding=1)
-        elif indim == 72:
-            self.conv1 = nn.Conv1d(1, 16, kernel_size=5, stride=1, padding=2)
-            
-        # 动态创建池化层
+        # 使用更多卷积层和全连接层
+        self.conv1 = nn.Conv1d(1, 32, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv1d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv1d(64, 128, kernel_size=3, stride=1, padding=1)
         self.pool = nn.MaxPool1d(kernel_size=2, stride=2)
         
-        # 定义全连接层
+        # 动态调整全连接层的输入维度
         if indim == 23:
-            self.fc1 = nn.Linear(16 * 12, 64)
-        elif indim == 41:
-            self.fc1 = nn.Linear(16 * 20, 64)
+            self.fc1 = nn.Linear(128 * 3, 256)
+        elif indim == 43:
+            self.fc1 = nn.Linear(128 * 5, 256)
         elif indim == 72:
-            self.fc1 = nn.Linear(16 * 36, 64)
-            
-        self.fc2 = nn.Linear(64, 2)
+            self.fc1 = nn.Linear(128 * 9, 256)
+        
+        self.fc2 = nn.Linear(256, 64)
+        self.fc3 = nn.Linear(64, 2)
         
     def forward(self, x):
-        # 输入x的维度为 [batch_size, indim]
-        x = x.unsqueeze(1)  # 在第二个维度上增加一个维度，变成 [batch_size, 1, indim]
-        x = self.conv1(x)
-        x = F.relu(x)
-        x = self.pool(x)
+        x = x.unsqueeze(1)
         
-        # 根据输入维度动态调整全连接层的输入维度
+        # 多层卷积和池化
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = self.pool(F.relu(self.conv3(x)))
+        
+        # 根据输入维度调整全连接层的输入维度
         if self.indim == 23:
-            x = x.view(-1, 16 * 12)  # 展开成一维向量
-        elif self.indim == 41:
-            x = x.view(-1, 16 * 20)  # 展开成一维向量
+            x = x.view(-1, 128 * 3)
+        elif self.indim == 43:
+            x = x.view(-1, 128 * 5)
         elif self.indim == 72:
-            x = x.view(-1, 16 * 36)  # 展开成一维向量
-            
-        x = self.fc1(x)
-        x = F.relu(x)
-        x = self.fc2(x)
+            x = x.view(-1, 128 * 9)
+        
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
         
         return x

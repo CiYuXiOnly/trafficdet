@@ -77,12 +77,14 @@ class Flow:
         pkts.sort(key=sortKey)
         fwd_flow,bwd_flow=flow_divide(pkts,self.src)
         # print(len(fwd_flow),len(bwd_flow))
+        
         # feature about packet arrival interval 13
         fiat_mean,fiat_min,fiat_max,fiat_std = packet_iat(fwd_flow)
         biat_mean,biat_min,biat_max,biat_std = packet_iat(bwd_flow)
         diat_mean,diat_min,diat_max,diat_std = packet_iat(pkts)
 
         # 为了防止除0错误，不让其为0
+        # 第一个数据包到最后一个数据包之间的时间差
         duration = round(pkts[-1].time - pkts[0].time+ decimal.Decimal(0.0001), 6) 
         
         # 拥塞窗口大小特征 15
@@ -94,7 +96,9 @@ class Flow:
         fpnum=len(fwd_flow)
         bpnum=len(bwd_flow)
         dpnum=fpnum+bpnum
-        bfpnum_rate = round(bpnum / (fpnum + 0.001), 6) 
+        # 包数比率
+        bfpnum_rate = round(bpnum / (fpnum + 0.001), 6)
+        # 单位时间内的包数
         fpnum_s = round(fpnum / duration, 6)
         bpnum_s = round(bpnum / duration, 6)
         dpnum_s = fpnum_s + bpnum_s
@@ -103,7 +107,9 @@ class Flow:
         fpl_total,fpl_mean,fpl_min,fpl_max,fpl_std = packet_len(fwd_flow)
         bpl_total,bpl_mean,bpl_min,bpl_max,bpl_std = packet_len(bwd_flow)
         dpl_total,dpl_mean,dpl_min,dpl_max,dpl_std = packet_len(pkts)
-        bfpl_rate = round(bpl_total / (fpl_total + 0.001), 6) 
+        # 包长比率
+        bfpl_rate = round(bpl_total / (fpl_total + 0.001), 6)
+        # 单位时间的包长
         fpl_s = round(fpl_total / duration, 6)
         bpl_s = round(bpl_total / duration, 6)
         dpl_s = fpl_s + bpl_s
