@@ -114,7 +114,7 @@ def create_tshark_feature(pcap_file_path, output_csv_path, perprint=2):
     i = 0
     threads = []
     # 创建一个线程池
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=200) as executor:
         for stream_index in stream_list:
             # print( 'processing stream {}'.format(stream_index))
             cmd = get_field_cmd(pcap_path, f, stream_index, output_path)

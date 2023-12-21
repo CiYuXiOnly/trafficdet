@@ -42,8 +42,10 @@ def merger_and_decom(statis_csvpath, tshark_csv_path, output_path):
     
     # 对object列进行类别编码
     df3 = df2_2.copy()
+    for col in object_columns:  
+        df3[col] = df3[col].astype(str)
     from sklearn.preprocessing import LabelEncoder
-    for column in df3.columns:  
+    for column in df3.columns:
         if df3[column].dtype == 'object':  
             le = LabelEncoder()  
             df3[column] = le.fit_transform(df3[column])

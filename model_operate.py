@@ -4,20 +4,17 @@ version:
 Author: zlx
 Date: 2023-12-08 10:56:10
 LastEditors: zlx
-LastEditTime: 2023-12-16 09:00:13
+LastEditTime: 2023-12-21 10:50:14
 '''
 import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-from extractor.sess_based.pcap_sess_feature import SessProcess
 from model import Net
 from utils.data.data_utils import GetDataObj
 from extractor.flow_based.pcap_flow_feature import FlowProcess
-from extractor.pkg_based.csv_feature import CsvfeatureExtractOp
-from extractor.pkg_based.pcap2csv import Pcap2csvOp
-from extractor.tshark_flow.tshark_feat_extract import TsharkExtractorProcess
+from extractor.scts_extractor.main import SCTS_Extractor
 '''
 训练，测试，预测
 '''
@@ -102,22 +99,16 @@ class ModelOperation():
     def pcap_predict(self, pcap_path, extract_type, model_path, threshold=0.5):
         label = None
         
-        val_list = ['flow', 'pkg', 'sess', 'tshark']
+        val_list = ['flow', 'scts']
         if extract_type not in val_list:
             print('不支持的特征提取方式！！！')
             return (detail, label, probability)
         
-        if extract_type == 'pkg':
-            detail, final_label, probability, prefer = self._predict_pkg(pcap_path, model_path, threshold)
-        
-        elif extract_type == 'flow':
+        if extract_type == 'flow':
             detail, final_label, probability, prefer = self._predict_flow(pcap_path, model_path, threshold)
         
-        elif extract_type == 'sess':
-            detail, final_label, probability, prefer = self._predit_sess(pcap_path, model_path, threshold)
-        
-        elif extract_type == 'tshark':
-            detail, final_label, probability, prefer = self._predict_tshark(pcap_path, model_path, threshold)
+        elif extract_type == 'scts':
+            detail, final_label, probability, prefer = self._predict_scts(pcap_path, model_path, threshold)
             
         return detail, final_label, probability, prefer
     
@@ -173,39 +164,6 @@ class ModelOperation():
             
         return detail, final_label, probability, prefer
     
-    
-    def _predict_pkg(self, pcap_path, model_path, threshold=0.5):
-        detail = None
-        label = None
-        probability = None
-        prefer = 0
-        
-        # pcap文件转换为csv文件
-        op1 = Pcap2csvOp(pcapfilepath=pcap_path, csvfilepath='data/csv/example_pkg.csv', isadded=False)
-        op1.generateCSV()
-        # csv文件转换为csv特征文件
-        op2 = CsvfeatureExtractOp(csvpath='data/csv/example_pkg.csv', featured_csvpath='data/featured_csv/example_pkg.csv', isadded=False)
-        op2.extract()
-        # 读取csv特征文件，获得dataframe
-        op3 = GetDataObj()
-        df = op3.get_df_from_featured_csv(featured_csv_path='data/featured_csv/example_pkg.csv')
-        # print(df.columns)
-        # # 也可以使用get_df_from_featured_csv_add_label函数，添加label，可以生成dataloader对象
-        
-        # 实例化模型并加载模型
-        model = Net(indim=23)
-        if 'pkg' not in model_path:
-            print('指定的特征提取方式与模型不匹配！！！')
-            return (detail, label, probability)
-        model.load_state_dict(torch.load(model_path))
-        
-        # 预测，获得每个样本的预测标签和概率
-        # pred_label [1, 0, 1]  preb [[0.3,0.7], [0.4,0.6], [0.2, 0.8]]
-        pred_label, preb = self.predict(model, df)
-        
-        detail, final_label, probability, prefer = self.get_result(pred_label, preb, threshold)
-        return detail, final_label, probability, prefer
-    
     def _predict_flow(self, pcap_path, model_path, threshold=0.5):
         detail = None
         label = None
@@ -245,62 +203,34 @@ class ModelOperation():
         
         return detail, final_label, probability, prefer
     
-    def _predit_sess(self, pcap_path, model_path, threshold=0.5):
+    
+    def _predict_scts(self, pcap_path, model_path, threshold=0.5):
         detail = None
         label = None
         probability = None
         prefer = 0
         
-        # 根据pcap文件提取特征到csv文件
-        SessProcess().extract_sess_feature_from_pcap(pcap_path=pcap_path, 
-                                                    csv_path='data/featured_csv/example_sess.csv',
-                                                    label='unknown',
-                                                    per_print=100)
+        # 根据pcap文件生成特征csv文件
+        csv_path = 'data/featured_csv/example_scts.csv'
+        e = SCTS_Extractor(pcap_path, csv_path)
+        e.run()
+        
         # 读取csv特征文件，获得dataframe
         op = GetDataObj()
-        df = op.get_df_from_featured_csv(featured_csv_path='data/featured_csv/example_sess.csv')
-        df = df.drop(["src_ip", "dst_ip", "sport", "dport", "label"], axis=1)
-        # print(df.dtypes)
-        model = Net(indim=23)
-        if 'sess' not in model_path:
-            print('指定的特征提取方式与模型不匹配！！！')
-            return (detail, label, probability)
-        model.load_state_dict(torch.load(model_path))
-        
-        pred_label, preb = self.predict(model, df)
-        detail, final_label, probability, prefer = self.get_result(pred_label, preb, threshold)
-        
-        return detail, final_label, probability, prefer
-    
-    
-    def _predict_tshark(self, pcap_path, model_path, threshold=0.5):
-        detail = None
-        label = None
-        probability = None
-        prefer = 0
-        
-        # 根据pcap文件提取特征到csv文件
-        tp = TsharkExtractorProcess(pcap_path=pcap_path, 
-                                output_dir='./data/featured_csv/',
-                                saved_file_type='csv')
-        tp.extract(target="tls", isall=False)
-       
-        # 读取csv特征文件，获得dataframe
-        op = GetDataObj()
-        pcap_name = os.path.basename(pcap_path)
-        csvname = pcap_name.split('.')[0] + '_tshark' + '.csv'
-        csv_path = os.path.join('./data/featured_csv/', csvname)
-        df = op.get_df_from_featured_csv(featured_csv_path=csv_path)
-        df = df.drop(['src_ip', 'dest_ip', 'src_port', 'dest_port'], axis=1)
+        df = op.get_df_from_featured_csv(featured_csv_path='data/featured_csv/example_scts.csv')
+        # print(df.columns)
         
         # 实例化模型并加载模型
-        model = Net(indim=41)
-        if 'tshark' not in model_path:
+        model = Net(indim=72)
+        if 'scts' not in model_path:
             print('指定的特征提取方式与模型不匹配！！！')
             return (detail, label, probability)
         model.load_state_dict(torch.load(model_path))
         
-        # 预测
+        # 预测，获得每个样本的预测标签和概率
+        # pred_label [1, 0, 1]  preb [[0.3,0.7], [0.4,0.6], [0.2, 0.8]]
         pred_label, preb = self.predict(model, df)
+        
         detail, final_label, probability, prefer = self.get_result(pred_label, preb, threshold)
+        
         return detail, final_label, probability, prefer

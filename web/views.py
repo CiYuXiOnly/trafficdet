@@ -4,7 +4,7 @@ version:
 Author: zlx
 Date: 2023-12-12 13:20:05
 LastEditors: zlx
-LastEditTime: 2023-12-12 18:31:45
+LastEditTime: 2023-12-21 10:37:42
 '''  
 from flask import request,render_template,url_for,redirect,session, flash
 from web import app
@@ -57,19 +57,15 @@ def file_detection():
     model_path = None
     extract_type = None
     threshold = None
-    if model_type == 'packet_CIC-IDS-2017':
-        model_path = 'model/pkg_model_CIC.pth'
-        extract_type = 'pkg'
-        threshold = 0.5
     
-    elif model_type == 'flow_CIC-IDS-2017':
+    if model_type == 'flow_CIC-IDS-2017':
         model_path = 'model/flow_model_CIC.pth'
         extract_type = 'flow'
         threshold = 0.85
     
-    elif model_type == 'session_CIC-IDS-2017':
-        model_path = 'model/sess_model_CIC.pth'
-        extract_type = 'sess'
+    elif model_type == 'scts_CIC-IDS-2017':
+        model_path = 'model/scts_model_CIC.pth'
+        extract_type = 'scts'
         threshold = 0.5
     
     else:

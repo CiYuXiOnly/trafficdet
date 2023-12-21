@@ -60,7 +60,7 @@ tshark -r 1.pcap -T fields -e frame.number -e tcp.stream获取stream和pkgid的�
 
 
 
-v1.0选择了以下字段，加上原有的72维统计特征，总共记名特征105个，降维后72个
+这里选择了以下字段，加上原有的72维统计特征，总共记名特征105个，降维后72个
 
 ```python
 [

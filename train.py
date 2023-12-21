@@ -4,7 +4,7 @@ version:
 Author: zlx
 Date: 2023-12-09 14:14:33
 LastEditors: zlx
-LastEditTime: 2023-12-20 15:56:56
+LastEditTime: 2023-12-21 16:01:11
 '''
 
 '''
@@ -44,9 +44,37 @@ def flow_based_train():
     print('模型保存在 {}'.format(model_path))
 
 
+def scts_train():
+    print()
+    print('+++++++++++++++ scts_extractor ++++++++++++++')
+    print('=============CIC-IDS-2017数据集=============')
+    
+    model_usr = ModelOperation()
+    model = Net(indim=72)
+    op = GetDataObj()
+    df_good = op.get_df_from_featured_csv_add_label(featured_csv_path='data/featured_csv/benign_small_scts.csv', label='good')
+    df_bad = op.get_df_from_featured_csv_add_label(featured_csv_path='data/featured_csv/malicious_small_scts.csv', label='bad')
+    df = pd.concat([df_good, df_bad])
+    train_dataloader, test_dataloader  = op.get_splited_dataloader(df, num_classes=2, batch_size=32, train_ratio=0.8)
+    
+    # 训练模型
+    model_path = 'model/scts_model_CIC.pth'
+    model_usr.train_test(model=model, 
+                         train_dataloader=train_dataloader, 
+                         test_dataloader=test_dataloader,
+                         num_epochs=20, 
+                         model_path=model_path,
+                         per_print=20
+                         )
+    print('模型保存在 {}'.format(model_path))
+    return
+
+
 def main():
     
-    # flow_based_train()
+    flow_based_train()
+    
+    # scts_train()
     
     return
 
