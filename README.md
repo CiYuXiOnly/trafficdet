@@ -1,16 +1,31 @@
 ## 基于pytorch的web恶意流量检测平台
 
-利用深度学习进行加密恶意流量的检测与分类
+利用深度学习进行恶意流量的检测与分类
 
 简单地说，该项目只是一个在线检测pcap文件**用于学习的demo**，以及用于学习加密流量特征提取、恶意流量检测相关算法
 
+**背景**，现有工作大多是基于已经提取好特征的csv文件，或者用工具以及自行设置的特征提取代码（效率更高的c/c++等）来做高效的IDS，基于python且很有效的特征提取比较少，因此难以做一个有效的，并不怎么需要实时性的特征提取方法，以实现对pcap文件的离线检测
+
+**写在前面**，本项目是借助课程设计的机会，对于从pcap中提取特征到训练，到预测，以及深度学习算法的一次探索与尝试，
+
+- 对于特征提取，参考修改并实验了4种方法，并最后提出了scts_extractor：基于scapy和tshark融合统计特征与TLS，DNS的特征提取
+       最终3.x特征提取器只保留了区分度较强的：1.基于scapy的流统计特征提取，2.对前者升级的scts_exactor（慢）
+       实际上这里提出的scts_extractor也并不很好用，同一模型和开源数据集提取特征的效果差距还是很大
+- 对于算法，尝试了CNN, LSTM, 基于CNN的ResNet, 图神经网络算法graphsage，
+       在同一特征提取下经比较效果：
+              CNN和ResNet效果差不多，但是后者训练更慢
+              LSTM略差
+              graphsage更差（可能是ip随机化构建图的过程有问题）
+       所以最终web端选择了CNN
+- 数据集，使用CIC-IDS-2017原始pcap数据集的Monday和Tuesday，
+
 ## working on version
 
-v3.0.3，v1.4.0
+v3.0.4，v1.4.1
 
-- v1.x，侧重pcap文件提取特征为csv，并使用模型训练并预测pcap文件，评估特征提取，无web支持，1.x的代码在v1.x分支
+- v1.x，侧重pcap文件提取特征为csv，并使用模型训练并预测pcap文件，以此评估特征提取，无web支持，1.x的代码在v1.x分支
 
-- v2.x，课程设计版本，在v1.x基础上添加web支持，前端，模型其他一些内容是其他同学写的，2.x的代码在v2.x分支中（不再维护）
+- v2.x，课程设计版本，在v1.x基础上添加web支持，前端，和其他一些内容是其他同学写的，2.x的代码在v2.x分支中（无更新很长时间了）
 
 - v3.x是在v1.x基础上提供了流量检测与分类算法测试目录alg/（独立于其他模块），以及自己写的相对简洁前端，3.x的代码在默认main分支中
 
@@ -26,10 +41,10 @@ v3.0.3，v1.4.0
 >
 > 难点在于
 >
-> 1. 特征提取，即pcap文件转换为有效的csv文件，现有的公开广泛使用的数据集多是csv格式，是用其他工具等提取pcap文件特征为csv，难以直接集成在该项目，于是需要一些python提取pcap文件的方案
-> 2. 样本粒度：包，单向流，双向流，会话？
-> 3. 数据集质量（恶意的pcap文件中所提取的若干样本（比如双向流）不一定都是恶意流）
-
+> 1. 特征提取，即pcap文件转换为有效的csv文件
+> 2. 特征提取时样本粒度：包，单向流，双向流，会话？
+> 3. 数据集质量（恶意的pcap文件中所提取的若干样本（比如，双向流）不一定都是恶意的）
+> tips, 数据集这部分或许可以提取特征后先做个预聚类再打标签
 
 
 ## 目录
@@ -74,7 +89,7 @@ python 3.9（主要和torch，numpy等版本适配即可）
 
 requirements.txt
 
-建议不要直接pip -r，先搭建pytorch环境，其他包如flask手动装下，没有多少，可以直接跑tmp.py所有函数来测试环境
+建议不要直接pip -r，先搭建pytorch环境，其他包如flask，scapy手动装，没有多少
 
 ## 运行
 
@@ -114,7 +129,7 @@ python -m alg.resnet.train --dataset=UNSW-NB15 --binary=1
 
 **开始**
 
-`trafficdet(data).zip` 提供了可以用于跑通所有模块和功能的测试数据
+`trafficdet(data).zip` 提供了可以用于跑通1.x所有模块和功能的测试数据
 
 **快速开始**
 
@@ -130,7 +145,6 @@ python -m alg.resnet.train --dataset=UNSW-NB15 --binary=1
 ```
 
 
-
 ### 特征提取
 
 特征提取（pcap -> csv）
@@ -141,9 +155,9 @@ python -m alg.resnet.train --dataset=UNSW-NB15 --binary=1
 - 基于t_shark的加密流特征提取
 - scts_exactor加密流特征提取（"scapy基于流的特征提取"升级版）
 
-**v3.0.3以及3.x之后版本，将只提供scts_exactor特征提取方法，不过其他的在1.x中仍然存在**
+**v3.0.3以及3.x之后版本，将只提供scts_exactor和scapy基于流的特征提取方法以及训练预测以及web部分，不过在1.x版本中中仍然保留**
 
-**scts_exactor**是利用scapy库和tshark命令行工具结合的特征提取方法，粒度：stream（双向流）
+**scts_exactor**是利用scapy库和tshark命令行工具结合的特征提取方法，粒度：stream（双向流，也可以视为会话）
 
 scapy库提取一个pcap文件中若干stream的字段与统计特征
 
@@ -151,9 +165,9 @@ tshark（需要tshark环境变量）提取TLS特征和DNS背景信息
 
 **更多信息**
 
-特征提取方式scts_exactor：<a href="./readme/scts_extractor.md">scts_exactor</a>
+特征提取方式scts_exactor：<a href="readme/scts_extractor.md">scts_exactor</a>
 
-其他特征提取方式，特征提取效果实验以及参考信息：<a href="./readme/pcap2csv特征提取.md">特征提取实验以及参考信息</a>
+其他特征提取方式，特征提取效果实验以及参考信息：<a href="readme/pcap2csv特征提取.md">特征提取实验以及参考信息</a>
 
 
 
@@ -179,7 +193,7 @@ v3.x版本：web模块使用fask+bootstrap+jinja2
 
 **pcap预测模型**
 
-输入特征数维度，输出[b，2]（二分类），改模型时建议适配，否则需要重写dataset以及dataloader
+输入特征数维度，输出[b，2]（二分类），改模型时建议适配，否则需要重写dataset以及dataloader相关类
 
 ```cmd
 # 模型命名
@@ -197,7 +211,7 @@ pkg_model_CIC.pth #基于包特征,ICI-IDS-2017部分数据集
 
 若干样本的类别和概率 -> 整个文件的类别和概率，这部分计算地可能不太科学，可能需要改算法
 
-就是改这个：model_operate.ModelOperation().pcap_predict
+就是改这个：model_operate.ModelOperation().pcap_predict -> get_result()
 
 ##### 怎么改alg/ 目录下的算法
 
@@ -209,13 +223,13 @@ pkg_model_CIC.pth #基于包特征,ICI-IDS-2017部分数据集
 
 v3.x版本
 
-<img src="./readme/img/image-20231213190935301.png" alt="image-20231213190935301" style="zoom:33%;" />
+<img src="readme/img/image-20231213190935301.png" alt="image-20231213190935301" style="zoom:33%;" />
 
-<img src="./readme/img/image-20231213190818063.png" alt="image-20231213190818063" style="zoom:33%;" />
+<img src="readme/img/image-20231213190818063.png" alt="image-20231213190818063" style="zoom:33%;" />
 
-<img src="./readme/img/image-20231213190852677.png" alt="image-20231213190852677" style="zoom:33%;" />
+<img src="readme/img/image-20231213190852677.png" alt="image-20231213190852677" style="zoom:33%;" />
 
 ## 其他
 
-更新说明：<a href="./readme/更新说明.md">更新说明</a>
+更新说明：<a href="readme/更新说明.md">更新说明</a>
 
