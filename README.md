@@ -152,11 +152,6 @@ python -m alg.resnet.train --dataset=UNSW-NB15 --binary=1
 
 - 如果需要alg/ 模块的数据，可以下载CSE-CIC-IDS2018.zip，UNSW-NB15_1.zip等文件（也可以去官网下载）
 
-```
-链接：https://pan.baidu.com/s/1Z4kzuISRaNTnXxxQG40khQ 
-提取码：f4hz
-```
-
 
 ### 特征提取
 
